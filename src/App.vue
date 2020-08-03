@@ -5,7 +5,11 @@
 </template>
 
 <script>
+import { api } from '@/utils/request';
 export default {
-  name: 'App'
+  name: 'App',
+  mounted() {
+    api.setBaseUrl();
+  }
 };
 </script>

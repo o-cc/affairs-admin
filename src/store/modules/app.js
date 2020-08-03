@@ -7,7 +7,8 @@ const state = {
       : true,
     withoutAnimation: false
   },
-  device: 'desktop'
+  device: 'desktop',
+  iCode: 'test'
 };
 
 const mutations = {
@@ -27,6 +28,9 @@ const mutations = {
   },
   TOGGLE_DEVICE: (state, device) => {
     state.device = device;
+  },
+  SET_iCODE: (state, iCode) => {
+    state.iCode = iCode;
   }
 };
 
@@ -39,6 +43,9 @@ const actions = {
   },
   toggleDevice({ commit }, device) {
     commit('TOGGLE_DEVICE', device);
+  },
+  setICode({ commit }, iCode) {
+    commit('SET_iCODE', iCode);
   }
 };
 
