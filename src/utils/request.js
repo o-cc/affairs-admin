@@ -2,11 +2,12 @@ import axios from 'axios';
 import { MessageBox, Message } from 'element-ui';
 import store from '@/store';
 import { getToken } from '@/utils/auth';
+import { getObjKey } from '@/utils';
 import qs from 'qs';
 const query = qs.parse(window.location.search.slice(1));
 
-const baseURL = process.env.VUE_APP_BASE_API;
-const baseAdmin = process.env.VUE_APP_ADMIN_BASE_API || '/api';
+const baseURL = process.env.VUE_APP_BASE_API || '/api';
+const baseAdmin = process.env.VUE_APP_ADMIN_BASE_API || '/admin';
 // create an axios instance
 const service = axios.create({
   baseURL: baseAdmin, // url = base url + request url
@@ -24,12 +25,12 @@ export const api = {
     return this.instance.post('/authorizations/', data);
   },
   setBaseUrl(iCode = store.getters.iCode) {
-    this.instance.defaults.baseURL = `${baseAdmin}/${iCode}`;
+    this.instance.defaults.baseURL = `${baseURL}/${iCode}`;
   }
 };
 
 export const setUrl = (iCode = store.getters.iCode) => {
-  service.defaults.baseURL = `${baseURL}/admin/${iCode}`;
+  service.defaults.baseURL = `${baseAdmin}/${iCode}`;
 };
 
 // request interceptor
@@ -37,7 +38,7 @@ service.interceptors.request.use(
   config => {
     // do something before request is sent
     if (store.getters.token) {
-      config.headers['Authorization'] = getToken();
+      config.headers['Authorization'] = 'JWT ' + getToken();
     }
     return config;
   },
@@ -56,14 +57,26 @@ service.interceptors.response.use(
   },
   error => {
     console.log('err' + error); // for debug
-    Message({
-      message: error.message,
-      type: 'error',
-      duration: 5 * 1000
-    });
+    if (error.response && error.response.status === 400) {
+      let data = error.response.data;
 
+      Message({
+        message: data[getObjKey(data, 0)].join(),
+        type: 'error',
+        duration: 5 * 1000
+      });
+    } else {
+      Message({
+        message: error.message,
+        type: 'error',
+        duration: 5 * 1000
+      });
+    }
     if (error.response && error.response.status === 401) {
-      MessageBox.confirm('您处在登出状态，请重新登录', 'Confirm logout', {
+      let errmsg = error.response.data.errmsg;
+      let detail = error.response.data.detail;
+      let errMsg = errmsg ? errmsg.join() : detail;
+      MessageBox.confirm(errMsg, 'Confirm logout', {
         confirmButtonText: 'Re-Login',
         cancelButtonText: 'Cancel',
         type: 'warning'

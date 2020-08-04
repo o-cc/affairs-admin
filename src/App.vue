@@ -5,11 +5,12 @@
 </template>
 
 <script>
-import { api } from '@/utils/request';
+import service, { api, setUrl } from '@/utils/request';
 export default {
   name: 'App',
   mounted() {
     api.setBaseUrl();
+    setUrl();
   }
 };
 </script>

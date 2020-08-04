@@ -117,3 +117,8 @@ export function param2Obj(url) {
   });
   return obj;
 }
+export const getObjKey = (obj, index) => {
+  if (typeof obj !== 'object') return obj;
+  if (index === undefined) return Object.keys(obj);
+  return Object.keys(obj)[index];
+};
