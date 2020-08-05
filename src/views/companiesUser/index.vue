@@ -57,23 +57,6 @@
           <span>{{ scope.row.last_login }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="150">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            @click.stop="handleEdit(scope.$index, scope.row)"
-          >
-            编辑
-          </el-button>
-          <el-button
-            size="mini"
-            type="danger"
-            @click.stop="handleDelete(scope.$index, scope.row)"
-          >
-            删除
-          </el-button>
-        </template>
-      </el-table-column>
     </el-table>
     <el-row type="flex" justify="end" :gutter="10" style="margin-top:10px;">
       <el-button

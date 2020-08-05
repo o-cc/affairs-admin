@@ -33,7 +33,31 @@ export function deleteCompanyUser(data) {
 //不可用
 export function putUserPwd(data) {
   return request({
-    url: '/passwords/' + data.id + '/',
+    url: `/users/${data.id}/passwords/`,
+    method: 'put',
+    data
+  });
+}
+
+export function getCategories(params) {
+  return request({
+    url: '/categories/',
+    method: 'get',
+    params
+  });
+}
+
+export function postCategories(data) {
+  return request({
+    url: '/categories/',
+    method: 'post',
+    data
+  });
+}
+
+export function putCateById(data) {
+  return request({
+    url: `/categories/${data.id}/`,
     method: 'put',
     data
   });

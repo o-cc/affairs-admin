@@ -74,14 +74,14 @@ export const constantRoutes = [
   },
 
   {
-    path: '/form',
+    path: '/news',
     component: Layout,
     children: [
       {
         path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
+        name: 'News',
+        component: () => import('@/views/news/index'),
+        meta: { title: '新闻管理', icon: 'form' }
       }
     ]
   },
