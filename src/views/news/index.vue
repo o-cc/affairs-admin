@@ -14,15 +14,27 @@
       <el-button style="margin-left: 20px;" @click="featCate">
         新增类别
       </el-button>
+      <el-button
+        type="danger"
+        style="margin-left: 20px;"
+        v-if="!!currSelectCate"
+        @click="delCate"
+      >
+        删除这个类别
+      </el-button>
       <el-divider></el-divider>
     </div>
     <div class="block detail" v-if="!!currSelectCate">
+      <h3>类别详情：</h3>
       <cateDetail
         :key="currSelectCate.id"
         :options="parentCate"
         :form="currSelectCate"
         @afterDetail="afterDetail"
       />
+      <el-divider></el-divider>
+      <h3 class="news-wrap">新闻管理：</h3>
+      <news :cateId="currSelectCate.id" :key="'news_' + currSelectCate.id" />
     </div>
     <div v-else class="body2">请选择新闻类别</div>
 
@@ -36,10 +48,12 @@
 </template>
 
 <script>
-import { getCategories, postCategories } from '@/api';
+import { getCategories, postCategories, deleteCate } from '@/api';
 import { param2Obj } from '@/utils';
 import featCate from './featCate';
 import cateDetail from './cateDetail';
+import news from './news';
+import { Message } from 'element-ui';
 
 function chunk2Parent(parents, childs) {
   let finalOp = parents.map(parent => {
@@ -83,7 +97,8 @@ function chunk2Parent(parents, childs) {
 export default {
   components: {
     featCate,
-    cateDetail
+    cateDetail,
+    news
   },
   data() {
     return {
@@ -92,7 +107,14 @@ export default {
       featCateModal: false,
       parentCate: [],
       options: [],
-      currSelectCate: undefined,
+      currSelectCate: {
+        id: 27,
+        is_index: true,
+        key: '',
+        name: '后台管理测试',
+        parent_id: '',
+        sequence: 1
+      },
       selectValues: [],
       detailKey: 0
     };
@@ -112,6 +134,17 @@ export default {
     afterDetail() {
       this.currSelectCate = undefined;
       this.getCategoiesList();
+    },
+    delCate() {
+      deleteCate(this.currSelectCate.id)
+        .then(res => {
+          Message({
+            message: '删除成功!',
+            type: 'success'
+          });
+          this.getCategoiesList();
+        })
+        .catch(() => {});
     },
     formatOption() {
       let parents = this.fetchCateData.filter(i => !i.parent_id);

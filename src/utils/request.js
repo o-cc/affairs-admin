@@ -26,8 +26,16 @@ export const api = {
   },
   setBaseUrl(iCode = store.getters.iCode) {
     this.instance.defaults.baseURL = `${baseURL}/${iCode}`;
+    this.instance.defaults.headers['Authorization'] = `JWT ${getToken()}`;
+    withoutKey.defaults.headers['Authorization'] = `JWT ${getToken()}`;
   }
 };
+
+export const withoutKey = axios.create({
+  timeout: 5000,
+  baseURL,
+  withCredentials: true
+});
 
 export const setUrl = (iCode = store.getters.iCode) => {
   service.defaults.baseURL = `${baseAdmin}/${iCode}`;

@@ -39,7 +39,7 @@
         type="number"
       ></el-input>
     </el-form-item>
-    <el-form-item label="修改信息" :label-width="formLabelWidth">
+    <el-form-item label="类别修改" :label-width="formLabelWidth">
       <el-switch
         v-model="modify"
         active-color="#13ce66"
@@ -109,7 +109,6 @@ export default {
             ...this.currForm,
             parent_id: parent_id
           };
-          console.log(data);
           putCateById(data).then(() => {
             this.$message({
               type: 'success',
