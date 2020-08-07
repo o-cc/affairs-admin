@@ -41,7 +41,7 @@
     <featCate
       @onClose="featCateModal = false"
       :options="parentCate"
-      :open="featCateModal"
+      v-if="featCateModal"
       @afterFeat="afterFeat"
     />
   </div>
@@ -63,7 +63,7 @@ function chunk2Parent(parents, childs) {
       let children2 = [];
 
       childs.forEach(child2 => {
-        if (child.parent_id === child2.id) {
+        if (child.id === child2.parent_id) {
           children2.push({
             ...child2,
             value: child2.id,
@@ -71,7 +71,6 @@ function chunk2Parent(parents, childs) {
           });
         }
       });
-
       children2.length > 0 && (child.children = children2);
       if (child.parent_id === parent.id) {
         children.push({
@@ -107,14 +106,17 @@ export default {
       featCateModal: false,
       parentCate: [],
       options: [],
-      currSelectCate: {
+      /*
+       {
         id: 27,
         is_index: true,
         key: '',
         name: '后台管理测试',
         parent_id: '',
         sequence: 1
-      },
+      }
+      */
+      currSelectCate: undefined,
       selectValues: [],
       detailKey: 0
     };
@@ -136,13 +138,18 @@ export default {
       this.getCategoiesList();
     },
     delCate() {
-      deleteCate(this.currSelectCate.id)
-        .then(res => {
-          Message({
-            message: '删除成功!',
-            type: 'success'
-          });
-          this.getCategoiesList();
+      this.$confirm('确定删除吗?')
+        .then(() => {
+          deleteCate(this.currSelectCate.id)
+            .then(res => {
+              Message({
+                message: '删除成功!',
+                type: 'success'
+              });
+              this.getCategoiesList();
+              this.currSelectCate = undefined;
+            })
+            .catch(() => {});
         })
         .catch(() => {});
     },
@@ -151,6 +158,7 @@ export default {
       let childs = this.fetchCateData.filter(i => i.parent_id);
       //一级与二级的组合
       let secondLevel = chunk2Parent(parents, childs);
+      console.log(secondLevel);
       //[]有三级和二级
       this.parentCate = secondLevel.map(item => {
         return {

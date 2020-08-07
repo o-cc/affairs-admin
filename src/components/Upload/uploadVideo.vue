@@ -40,12 +40,12 @@ export default {
     },
     action: {
       type: String,
-      default: 'http://upload.qiniup.com'
+      default: 'https://up-z2.qiniup.com'
     }
   },
   methods: {
     onSuccess(response) {
-      this.$emit('onSuccess', url);
+      this.$emit('onSuccess', this.tempUrl);
     },
     beforeUpload() {
       const _self = this;
@@ -54,9 +54,8 @@ export default {
           .then(response => {
             const key = response.data.key;
             const token = response.data.token;
-            const image_url = response.data.image_url;
             this.dataObj = { token, key };
-            this.tempUrl = response.data.image_url;
+            this.tempUrl = response.data.video_url;
             resolve(true);
           })
           .catch(() => {

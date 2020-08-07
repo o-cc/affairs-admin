@@ -37,6 +37,13 @@
       </el-form-item>
       <el-form-item label="封面图片" :label-width="formLabelWidth">
         <uploadImg @onSuccess="imgUpSuccess" />
+        <el-row>
+          <div class="demo-image__placeholder image">
+            <div class="block">
+              <el-image :src="imgUrl" style="min-width: 100%;"></el-image>
+            </div>
+          </div>
+        </el-row>
       </el-form-item>
       <el-form-item label="新闻状态" :label-width="formLabelWidth">
         <el-select v-model="form.status" placeholder="请选择">
@@ -100,6 +107,14 @@
         :label-width="formLabelWidth"
       >
         <upLoadVideo @onSuccess="videoUpSuccess" />
+        <video
+          v-if="video_url"
+          autoplay
+          controls
+          preload
+          :src="video_url"
+          class="video"
+        ></video>
       </el-form-item>
       <el-form-item
         v-if="form.news_type === 'Video'"
@@ -110,7 +125,7 @@
           type="textarea"
           :rows="2"
           placeholder="请输入视频简要介绍"
-          v-model="form.video_dec"
+          v-model="form.video_desc"
         ></el-input>
       </el-form-item>
       <el-form-item
@@ -140,6 +155,7 @@ import { postCategoriesNews } from '@/api';
 import uploadImg from '@/components/Upload';
 import Tinymce from '@/components/Tinymce';
 import upLoadVideo from '@/components/Upload/uploadVideo';
+import store from '@/store';
 export default {
   components: {
     uploadImg,
@@ -149,7 +165,7 @@ export default {
   props: {
     open: {
       type: Boolean,
-      default: false
+      default: true
     },
     options: {
       type: Array,
@@ -176,7 +192,9 @@ export default {
         { value: 'GraphText', label: '图文' },
         { value: 'Video', label: '视频' }
       ],
-      authorList: [{ value: 3, label: '作者1' }],
+      authorList: [
+        { value: store.getters.userId || 3, label: store.getters.name }
+      ],
       uploadImgData: {
         image_name: '',
         image_url: ''
@@ -186,14 +204,15 @@ export default {
         { value: 'UNDER', label: '审核中' },
         { value: 'PASS', label: '审核通过' }
       ],
-      newType: 'GraphText',
-      newState: 'UNDER',
-      content: ''
+      video_url: '',
+      imgUrl: ''
     };
   },
   methods: {
     videoUpSuccess(url) {
       console.log('videoUrl', url);
+      this.video_url = url;
+      this._data.form.video_name = url.slice(url.lastIndexOf('/') + 1);
     },
     imgUpSuccess(res) {
       console.log('response', res);
@@ -201,6 +220,7 @@ export default {
         ...this.form,
         index_image_name: res.image_name
       };
+      this.imgUrl = res.image_url;
     },
     feat() {
       console.log(this.form);
@@ -248,5 +268,14 @@ export default {
 <style scoped>
 .input {
   width: 320px;
+}
+
+.video {
+  width: 500px;
+  height: 300px;
+}
+
+.image {
+  width: 150px;
 }
 </style>

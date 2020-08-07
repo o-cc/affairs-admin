@@ -169,7 +169,7 @@ export default {
     },
     paginationClick(type) {
       if (this.listLoading) return;
-      url = type === 'next' ? this.userData.next : this.userData.previous;
+      let url = type === 'next' ? this.userData.next : this.userData.previous;
       let { page } = param2Obj(url);
       this.currPage = page;
       this.fetchData(page);

@@ -25,7 +25,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <!-- <el-form-item label="文章作者" :label-width="formLabelWidth">
+      <el-form-item label="文章作者" :label-width="formLabelWidth">
         <el-select v-model="detail.author_id" placeholder="请选择">
           <el-option
             v-for="item in authorList"
@@ -34,11 +34,20 @@
             :value="item.value"
           ></el-option>
         </el-select>
-      </el-form-item> -->
+      </el-form-item>
       <el-form-item label="封面图片" :label-width="formLabelWidth">
         <uploadImg @onSuccess="imgUpSuccess" />
-        <el-row v-if="detail.index_image_url">
-          <img :src="detail.index_image_url" class="image" />
+        <el-row>
+          <div class="demo-image__placeholder image">
+            <div class="block">
+              <el-image :src="detail.index_image_url">
+                <div slot="placeholder" class="image-slot">
+                  封面
+                  <span class="dot">...</span>
+                </div>
+              </el-image>
+            </div>
+          </div>
         </el-row>
       </el-form-item>
       <el-form-item label="新闻状态" :label-width="formLabelWidth">
@@ -160,7 +169,7 @@ export default {
   props: {
     open: {
       type: Boolean,
-      default: false
+      default: true
     },
     cateId: {
       type: Number || String
@@ -189,7 +198,7 @@ export default {
         { value: 'GraphText', label: '图文' },
         { value: 'Video', label: '视频' }
       ],
-      authorList: [{ value: 3, label: '作者1' }],
+      authorList: [],
       uploadImgData: {
         image_name: '',
         image_url: ''
@@ -222,6 +231,12 @@ export default {
         ...this.form,
         index_image_name: url.slice(url.lastIndexOf('/') + 1)
       };
+    }
+
+    if (this.form.author_id && this.form.author) {
+      this.authorList = [
+        { label: this.form.author, value: this.form.author_id }
+      ];
     }
   },
   methods: {
@@ -284,8 +299,7 @@ export default {
   height: 300px;
 }
 .image {
-  width: auto;
-  height: 250px;
+  width: 150px;
   display: block;
 }
 </style>

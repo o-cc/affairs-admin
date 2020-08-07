@@ -107,3 +107,58 @@ export function modifyNews(cateId, data) {
     data
   });
 }
+
+export function getActivities({ page }) {
+  return request({
+    url: '/activities/',
+    method: 'get',
+    params: { page }
+  });
+}
+
+export function postActivities(data) {
+  return request({
+    url: '/activities/',
+    method: 'post',
+    data
+  });
+}
+
+export function putActivities(data) {
+  return request({
+    url: `/activities/${data.id}/`,
+    method: 'put',
+    data
+  });
+}
+
+export function deleteActivities(id) {
+  return request({
+    url: `/activities/${id}/`,
+    method: 'delete'
+  });
+}
+
+export function getQuestions(actId, page) {
+  return request({
+    url: `/activities/${actId}/questions/`,
+    method: 'get',
+    params: { page }
+  });
+}
+
+export function postQuestion(actId, data) {
+  return request({
+    url: `/activities/${actId}/questions/`,
+    method: 'post',
+    data
+  });
+}
+
+export function putQuestion(actId, data) {
+  return request({
+    url: `/activities/${actId}/questions/${data.id}/`,
+    method: 'put',
+    data
+  });
+}

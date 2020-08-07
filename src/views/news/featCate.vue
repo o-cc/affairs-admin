@@ -61,7 +61,7 @@ export default {
   props: {
     open: {
       type: Boolean,
-      default: false
+      default: true
     },
     options: {
       type: Array,
@@ -100,7 +100,7 @@ export default {
       console.log('val', val);
       this.form = {
         ...this.form,
-        parent_id: val[0]
+        parent_id: val[val.length - 1]
       };
     },
     close() {

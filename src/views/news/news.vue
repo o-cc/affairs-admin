@@ -99,19 +99,19 @@
       </el-button>
     </el-row>
     <feat-news
-      :open="featModal"
       :cateId="cateId"
       @onClose="featModal = false"
       @afterFeat="afterFeatNews"
+      v-if="featModal"
     ></feat-news>
 
     <news-detail
       @onClose="showDetail = false"
-      :open="showDetail"
       :cateId="cateId"
       @afterModify="afterModifyNews"
       :form="cellNews"
       :key="cellNews.id"
+      v-if="showDetail"
     ></news-detail>
   </div>
 </template>
