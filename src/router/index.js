@@ -87,6 +87,19 @@ export const constantRoutes = [
   },
 
   {
+    path: '/activity',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'Activity',
+        component: () => import('@/views/activity/index'),
+        meta: { title: '活动管理', icon: 'nested' }
+      }
+    ]
+  },
+
+  {
     path: '/nested',
     component: Layout,
     redirect: '/nested/menu1',
