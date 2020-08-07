@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="block">
-      广告类别：
+      商品：
       <el-select v-model="selectValue" placeholder="请选择">
         <el-option
           v-for="item in options"
@@ -12,7 +12,7 @@
       </el-select>
 
       <el-button style="margin-left: 20px;" @click="featCate">
-        新增广告类别
+        新增商品
       </el-button>
       <el-button
         type="danger"
@@ -20,33 +20,21 @@
         v-if="!!currSelect"
         @click="delCate"
       >
-        删除这个类别
+        删除这个商品
       </el-button>
       <el-divider></el-divider>
     </div>
     <div class="block detail" v-if="!!currSelect">
-      <h3>类别详情：</h3>
-      <detail-ad
+      <h3>商品详情：</h3>
+      <detail
         :form="currSelect"
         :key="currSelect ? currSelect.id : 'curr_'"
-      ></detail-ad>
-      <el-divider></el-divider>
-      <h3 class="news-wrap">答题列表：</h3>
-      <!-- <news :cateId="currSelect.id" :key="'news_' + currSelect.id" /> -->
-      <ads :adId="currSelect.id" :key="'news_' + currSelect.id" />
+        @afterFetch="afterDetail"
+      ></detail>
     </div>
-    <div v-else class="body2">请选择广告类别</div>
-    <!-- <questions
-      v-if="!!currSelect"
-      :actId="currSelect && currSelect.id"
-      :key="currSelect ? currSelect.id : 'curr_'"
-    ></questions> -->
-    <!-- <feat-act
-      v-if="featModal"
-      @onClose="featModal = false"
-      @afterFetch="afterFetch"
-    ></feat-act> -->
-    <FeatAdCate
+    <div v-else class="body2">请选择商品</div>
+
+    <feat-goods
       v-if="featModal"
       @onClose="featModal = false"
       @afterFetch="afterFetch"
@@ -55,22 +43,15 @@
 </template>
 
 <script>
-import { getAds, deleteAd } from '@/api';
+import { getGoods, deleteGoods } from '@/api';
 import { param2Obj } from '@/utils';
 import { Message } from 'element-ui';
-// import FeatAct from './featAct';
-// import DetailAct from './detailAct';
-import FeatAdCate from './featAdCate';
-import DetailAd from './detailAd';
-import ads from './ads';
-
+import FeatGoods from './featGoods';
+import detail from './detail';
 export default {
   components: {
-    // FeatAct,
-    // DetailAct,
-    FeatAdCate,
-    DetailAd,
-    ads
+    FeatGoods,
+    detail
   },
   data() {
     return {
@@ -111,22 +92,24 @@ export default {
       this.featModal = false;
       this.fetchList();
     },
-    afterDetail() {
-      this.currSelect = undefined;
+    afterDetail(form) {
+      this.currSelect = { ...form };
       this.fetchList();
     },
     delCate() {
-      deleteAd(this.currSelect.id)
-        .then(res => {
-          Message({
-            message: '删除成功!',
-            type: 'success'
-          });
-          this.currSelect = undefined;
-          this.selectValue = '';
-          this.fetchList();
-        })
-        .catch(() => {});
+      this.$confirm('删除商品操作无法恢复，确定吗？').then(() => {
+        deleteGoods(this.currSelect.id)
+          .then(res => {
+            Message({
+              message: '删除成功!',
+              type: 'success'
+            });
+            this.currSelect = undefined;
+            this.selectValue = '';
+            this.fetchList();
+          })
+          .catch(() => {});
+      });
     },
 
     formatOption() {
@@ -146,7 +129,7 @@ export default {
       this.currSelect = this.actDataWithIdKey[val];
     },
     fetchList(page = 1) {
-      getAds(page)
+      getGoods(page)
         .then(res => {
           let data = res.data;
           if (page === 1) {

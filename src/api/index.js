@@ -163,6 +163,13 @@ export function putQuestion(actId, data) {
   });
 }
 
+export function deleteQuestion(actId, id) {
+  return request({
+    url: `/activities/${actId}/questions/${id}/`,
+    method: 'delete'
+  });
+}
+
 export function getAds(page) {
   return request({
     url: `/content_categories/`,
@@ -221,6 +228,60 @@ export function putCateAds(id, data) {
   return request({
     url: `/categories/${id}/contents/${data.id}/`,
     method: 'put',
+    data
+  });
+}
+
+export function getGoods(page) {
+  return request({
+    url: `/goods/`,
+    method: 'get',
+    params: { page }
+  });
+}
+
+export function postGoods(data) {
+  return request({
+    url: `/goods/`,
+    method: 'post',
+    data
+  });
+}
+
+export function putGoods(data) {
+  return request({
+    url: `/goods/${data.id}/`,
+    method: 'put',
+    data
+  });
+}
+
+export function deleteGoods(id) {
+  return request({
+    url: `/goods/${id}/`,
+    method: 'delete'
+  });
+}
+
+export function getGoodsImg(id, page) {
+  return request({
+    url: `/goods/${id}/images/`,
+    method: 'get',
+    params: { page }
+  });
+}
+
+export function deleteGoodsImg(id, imgId) {
+  return request({
+    url: `/goods/${id}/images/${imgId}/`,
+    method: 'delete'
+  });
+}
+
+export function postGoodsImg(id, data) {
+  return request({
+    url: `/goods/${id}/images/`,
+    method: 'post',
     data
   });
 }
