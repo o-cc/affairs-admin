@@ -121,7 +121,7 @@ import { Message } from 'element-ui';
 import { getNewsListByCateId, deleteNews } from '@/api';
 import FeatNews from './featNews';
 import NewsDetail from './newsDetail';
-import { param2Obj } from '../../../mock/utils';
+import { param2Obj } from '@/utils';
 export default {
   components: {
     FeatNews,

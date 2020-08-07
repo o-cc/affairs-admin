@@ -5,7 +5,7 @@
       style="margin-bottom: 10px;"
       @click="featModal = true"
     >
-      新增问题
+      新增广告
     </el-button>
     <el-table
       v-loading="listLoading"
@@ -15,25 +15,30 @@
       fit
       highlight-current-row
     >
-      <el-table-column align="center" label="问题ID" width="70">
+      <el-table-column align="center" label="广告ID" width="70">
         <template slot-scope="scope">
           {{ scope.row.id }}
         </template>
       </el-table-column>
-      <el-table-column label="问题内容" align="center">
+      <el-table-column label="广告标题" align="center">
         <template slot-scope="scope">
-          {{ scope.row.content }}
+          {{ scope.row.title }}
         </template>
       </el-table-column>
-      <el-table-column label="类型" width="100">
+      <el-table-column label="类别名称" width="100">
         <template slot-scope="scope">
-          <span>{{ scope.row.type }}</span>
+          <span>{{ scope.row.category_name }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="积分" width="100" align="center">
+      <el-table-column label="广告地址" width="100" align="center">
         <template slot-scope="scope">
-          {{ scope.row.integral }}
+          <el-link type="primary" :href="scope.row.url">跳转地址</el-link>
+        </template>
+      </el-table-column>
+      <el-table-column label="是否显示" width="100" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.status ? '是' : '否' }}
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="200">
@@ -73,28 +78,27 @@
         <i class="el-icon-arrow-right el-icon--right"></i>
       </el-button>
     </el-row>
-
-    <feat-questions
+    <feat-ad
       v-if="featModal"
-      :actId="actId"
+      :adId="adId"
       @fetchData="afterQuestion"
       @onClose="featModal = false"
       :form="currForm"
-      :key="actId + (!currForm ? '_' : currForm.id)"
+      :key="adId + (!currForm ? '_' : currForm.id)"
       :isModify="!!currForm"
-    ></feat-questions>
+    ></feat-ad>
   </div>
 </template>
 
 <script>
 import { Message } from 'element-ui';
-import { getQuestions, deleteQuestion } from '@/api';
-import FeatQuestions from './featQuestion';
+import { getCateAds, deleteCateAds } from '@/api';
 import { param2Obj } from '@/utils';
+import FeatAd from './featAd';
 export default {
-  components: { FeatQuestions },
+  components: { FeatAd },
   props: {
-    actId: {
+    adId: {
       type: Number || String
     }
   },
@@ -128,9 +132,9 @@ export default {
     },
     rowClick(type, row) {
       if (type === 'delete') {
-        this.$confirm('是否删除该问题?')
+        this.$confirm('是否删除该广告?')
           .then(res => {
-            deleteQuestion(this.actId, row.id).then(() => {
+            deleteCateAds(this.adId, row.id).then(() => {
               Message({
                 message: '删除成功',
                 type: 'success'
@@ -146,7 +150,7 @@ export default {
     },
     fetchData(page = 1) {
       this.listLoading = true;
-      getQuestions(this.actId, page)
+      getCateAds(this.adId, page)
         .then(res => {
           this.listLoading = false;
           this.questions = res.data;

@@ -144,7 +144,7 @@ export default {
     };
   },
   mounted() {
-    this.info = this.form;
+    this.info = JSON.parse(JSON.stringify(this.form));
   },
   methods: {
     featOption() {

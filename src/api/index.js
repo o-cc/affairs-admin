@@ -162,3 +162,65 @@ export function putQuestion(actId, data) {
     data
   });
 }
+
+export function getAds(page) {
+  return request({
+    url: `/content_categories/`,
+    method: 'get',
+    params: { page }
+  });
+}
+
+export function postAd(data) {
+  return request({
+    url: `/content_categories/`,
+    method: 'post',
+    data
+  });
+}
+
+export function deleteAd(id) {
+  return request({
+    url: `/content_categories/${id}/`,
+    method: 'delete'
+  });
+}
+
+export function putAd(data) {
+  return request({
+    url: `/content_categories/${data.id}/`,
+    method: 'put',
+    data
+  });
+}
+
+export function getCateAds(id, page) {
+  return request({
+    url: `/categories/${id}/contents/`,
+    method: 'get',
+    params: { page }
+  });
+}
+
+export function postCateAds(id, data) {
+  return request({
+    url: `/categories/${id}/contents/`,
+    method: 'post',
+    data
+  });
+}
+
+export function deleteCateAds(id, cid) {
+  return request({
+    url: `/categories/${id}/contents/${cid}/`,
+    method: 'delete'
+  });
+}
+
+export function putCateAds(id, data) {
+  return request({
+    url: `/categories/${id}/contents/${data.id}/`,
+    method: 'put',
+    data
+  });
+}

@@ -1,39 +1,38 @@
 <template>
-  <el-dialog title="添加活动" :visible.sync="open" :before-close="close">
-    <el-form :model="actInfo" class="form">
-      <el-form-item label="活动名称" :label-width="formLabelWidth">
+  <el-dialog
+    :title="isModify ? '修改广告类别' : '添加广告类别'"
+    :visible.sync="open"
+    :before-close="close"
+  >
+    <el-form :model="info" class="form">
+      <el-form-item label="类别名称" :label-width="formLabelWidth">
         <el-input
           class="input"
-          v-model="actInfo.name"
+          v-model="info.name"
           autocomplete="off"
-          placeholder="活动名称"
+          placeholder="类别名称"
         ></el-input>
       </el-form-item>
-      <el-form-item label="活动简介" :label-width="formLabelWidth">
+      <el-form-item label="类别识别标识key" :label-width="formLabelWidth">
         <el-input
           class="input"
-          v-model="actInfo.desc"
+          v-model="info.key"
           autocomplete="off"
-          placeholder="活动简介"
-          type="textarea"
-          :row="4"
+          placeholder="类别识别标识key"
         ></el-input>
-      </el-form-item>
-      <el-form-item label="是否展示活动" :label-width="formLabelWidth">
-        <el-switch v-model="actInfo.is_show"></el-switch>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click.native="close">取 消</el-button>
       <el-button type="primary" @click.native="feat">
-        添加
+        {{ isModify ? '修改' : '添加' }}
       </el-button>
     </div>
   </el-dialog>
 </template>
 
 <script>
-import { postActivities } from '@/api';
+import { postAd } from '@/api';
 import { Message } from 'element-ui';
 export default {
   props: {
@@ -46,20 +45,23 @@ export default {
       default() {
         return {
           name: '',
-          desc: '',
-          is_show: false
+          key: ''
         };
       }
+    },
+    isModify: {
+      type: Boolean,
+      defalut: false
     }
   },
   data() {
     return {
       formLabelWidth: '120px',
-      actInfo: {}
+      info: {}
     };
   },
   mounted() {
-    this.actInfo = JSON.parse(JSON.stringify(this.form));
+    this.info = JSON.parse(JSON.stringify(this.form));
   },
   methods: {
     close() {
@@ -67,8 +69,8 @@ export default {
     },
     feat() {
       let error = '';
-      if (!this.actInfo.name) {
-        error = '请输入活动名称';
+      if (!this.info.name) {
+        error = '请输入名称';
       }
 
       if (error) {
@@ -78,8 +80,12 @@ export default {
           duration: 5 * 1000
         });
       }
-      postActivities(this.actInfo)
-        .then(() => this.$emit('afterFetch'))
+
+      postAd(this.info)
+        .then(() => {
+          Message({ message: '添加成功' });
+          this.$emit('afterFetch');
+        })
         .catch(e => {});
     }
   }
