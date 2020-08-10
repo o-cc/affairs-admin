@@ -192,6 +192,6 @@ export default {
   max-height: 50vh;
 }
 .input {
-  width: 350px;
+  max-width: 350px;
 }
 </style>

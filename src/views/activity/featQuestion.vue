@@ -228,7 +228,7 @@ export default {
 
 <style scoped>
 .input {
-  width: 350px;
+  max-width: 350px;
 }
 
 .remove {

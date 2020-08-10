@@ -213,6 +213,6 @@ export default {
 
 <style scoped lang="scss">
 .input {
-  width: 350px;
+  max-width: 350px;
 }
 </style>

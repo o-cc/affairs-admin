@@ -168,7 +168,7 @@ export default {
 
 <style scoped>
 .input {
-  width: 320px;
+  max-width: 320px;
 }
 
 .video {
