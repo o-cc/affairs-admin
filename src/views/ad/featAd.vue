@@ -141,7 +141,7 @@ export default {
           duration: 5 * 1000
         });
       }
-      console.log(data);
+      // console.log(data);
       if (this.isModify) {
         putCateAds(this.adId, data)
           .then(() => {

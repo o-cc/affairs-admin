@@ -4,6 +4,8 @@ import store from '@/store';
 import { getToken } from '@/utils/auth';
 import { getObjKey } from '@/utils';
 import qs from 'qs';
+import router from '@/router';
+
 const query = qs.parse(window.location.search.slice(1));
 
 const baseURL = process.env.VUE_APP_BASE_API || '/api';
@@ -28,6 +30,9 @@ export const api = {
     this.instance.defaults.baseURL = `${baseURL}/${iCode}`;
     this.instance.defaults.headers['Authorization'] = `JWT ${getToken()}`;
     withoutKey.defaults.headers['Authorization'] = `JWT ${getToken()}`;
+  },
+  getBaseUrl() {
+    return this.instance.defaults.baseURL;
   }
 };
 
@@ -67,12 +72,25 @@ service.interceptors.response.use(
     console.log('err' + error); // for debug
     if (error.response && error.response.status === 400) {
       let data = error.response.data;
-
-      Message({
-        message: data[getObjKey(data, 0)].join(),
-        type: 'error',
-        duration: 5 * 1000
-      });
+      let message = data[getObjKey(data, 0)].join();
+      if (/识别码/.test(message)) {
+        if (getToken()) {
+          router.push('/404');
+        }
+        Message({
+          message: '找不到该企业或企业不存在！',
+          type: 'error',
+          duration: 0,
+          center: true,
+          showClose: true
+        });
+      } else {
+        Message({
+          message,
+          type: 'error',
+          duration: 5 * 1000
+        });
+      }
     } else {
       Message({
         message: error.message,
@@ -80,7 +98,7 @@ service.interceptors.response.use(
         duration: 5 * 1000
       });
     }
-    if (error.response && error.response.status === 401) {
+    if (error.response && error.response.status === 401 && getToken()) {
       let errmsg = error.response.data.errmsg;
       let detail = error.response.data.detail;
       let errMsg = errmsg ? errmsg.join() : detail;

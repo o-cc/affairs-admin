@@ -97,7 +97,7 @@ export default {
         .catch(e => {});
     },
     cascaderChange(val) {
-      console.log('val', val);
+      // console.log('val', val);
       this.form = {
         ...this.form,
         parent_id: val[val.length - 1]

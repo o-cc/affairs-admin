@@ -3,7 +3,7 @@ import { defaultAvatar } from '@/config';
 
 export function login(data) {
   return request({
-    url: '/test/authorizations/',
+    url: '/authorizations/',
     method: 'post',
     data
   });

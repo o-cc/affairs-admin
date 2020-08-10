@@ -140,7 +140,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'index',
-        name: 'GoodsList',
+        name: 'OrderLists',
         component: () => import('@/views/orders/index'),
         meta: { title: '订单列表' }
       }

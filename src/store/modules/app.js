@@ -8,7 +8,7 @@ const state = {
     withoutAnimation: false
   },
   device: 'desktop',
-  iCode: 'test'
+  iCode: undefined
 };
 
 const mutations = {

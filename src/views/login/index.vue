@@ -55,20 +55,21 @@
         style="width:100%;margin-bottom:30px;"
         @click.native.prevent="handleLogin"
       >
-        Login
+        登录
       </el-button>
 
-      <div class="tips">
+      <!-- <div class="tips">
         <span style="margin-right:20px;">username: admin</span>
         <span>password: any</span>
-      </div>
+      </div> -->
     </el-form>
   </div>
 </template>
 
 <script>
 import { validUsername } from '@/utils/validate';
-
+import qs from 'qs';
+const query = qs.parse(window.location.search.slice(1));
 export default {
   name: 'Login',
   data() {
@@ -88,8 +89,8 @@ export default {
     };
     return {
       loginForm: {
-        username: '胖虎西西0',
-        password: '123qweQWE!'
+        username: '',
+        password: ''
       },
       loginRules: {
         username: [
@@ -103,6 +104,14 @@ export default {
       passwordType: 'password',
       redirect: undefined
     };
+  },
+  mounted() {
+    if (query.debug) {
+      this.loginForm = {
+        username: '胖虎西西0',
+        password: '123qweQWE!'
+      };
+    }
   },
   watch: {
     $route: {

@@ -88,8 +88,6 @@ function chunk2Parent(parents, childs) {
       label: parent.name
     };
   });
-  console.log('final', finalOp);
-
   return finalOp;
 }
 
@@ -156,10 +154,7 @@ export default {
     formatOption() {
       let parents = this.fetchCateData.filter(i => !i.parent_id);
       let childs = this.fetchCateData.filter(i => i.parent_id);
-      //一级与二级的组合
       let secondLevel = chunk2Parent(parents, childs);
-      console.log(secondLevel);
-      //[]有三级和二级
       this.parentCate = secondLevel.map(item => {
         return {
           label: item.name,

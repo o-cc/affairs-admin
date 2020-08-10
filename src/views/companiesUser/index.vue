@@ -140,7 +140,7 @@ export default {
     handleDelete(idx, row) {
       deleteCompanyUser(row)
         .then(res => {
-          console.log(res);
+          // console.log(res);
         })
         .catch(e => {
           console.log(e);

@@ -18,7 +18,7 @@
         :on-success="handleSuccess"
         :before-upload="beforeUpload"
         class="editor-slide-upload"
-        action="/api/test/media/images/"
+        :action="action"
         :headers="headers"
         list-type="picture-card"
       >
@@ -39,7 +39,7 @@
 <script>
 // import { getToken } from 'api/qiniu'
 import { getToken } from '@/utils/auth';
-
+import { api } from '@/utils/request';
 export default {
   name: 'EditorSlideUpload',
   props: {
@@ -60,8 +60,12 @@ export default {
     return {
       dialogVisible: false,
       listObj: {},
-      fileList: []
+      fileList: [],
+      action: ''
     };
+  },
+  mounted() {
+    this.action = api.getBaseUrl() + '/media/images/';
   },
   methods: {
     checkAllSuccess() {

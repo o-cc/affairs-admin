@@ -19,12 +19,13 @@
 </template>
 <script>
 import { getToken } from '@/utils/auth';
-
+import { api } from '@/utils/request';
 export default {
   data() {
     return {
       fileList: [],
-      url: ''
+      url: '',
+      action: ''
     };
   },
   props: {
@@ -43,11 +44,10 @@ export default {
           Authorization: `JWT ${getToken()}`
         };
       }
-    },
-    action: {
-      type: String,
-      default: '/api/test/media/images/'
     }
+  },
+  mounted() {
+    this.action = api.getBaseUrl() + '/media/images/';
   },
   methods: {
     handleRemove(file, fileList) {
