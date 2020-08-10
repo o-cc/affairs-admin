@@ -12,12 +12,12 @@ const baseAdmin = process.env.VUE_APP_ADMIN_BASE_API || '/admin';
 const service = axios.create({
   baseURL: baseAdmin, // url = base url + request url
   withCredentials: true, // send cookies when cross-domain requests
-  timeout: 10000 // request timeout
+  timeout: 20000 // request timeout
 });
 
 export const api = {
   instance: axios.create({
-    timeout: 5000,
+    timeout: 20000,
     baseURL,
     withCredentials: true // send cookies when cross-domain requests
   }),
@@ -32,7 +32,7 @@ export const api = {
 };
 
 export const withoutKey = axios.create({
-  timeout: 5000,
+  timeout: 20000,
   baseURL,
   withCredentials: true
 });

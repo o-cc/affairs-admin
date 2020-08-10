@@ -285,3 +285,19 @@ export function postGoodsImg(id, data) {
     data
   });
 }
+
+export function getOrders(params) {
+  return request({
+    url: `/orders/`,
+    method: 'get',
+    params
+  });
+}
+
+export function putOrders(data) {
+  return request({
+    url: `/orders/${data.id}/`,
+    method: 'put',
+    data
+  });
+}
