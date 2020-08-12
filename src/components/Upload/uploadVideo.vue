@@ -4,7 +4,7 @@
     class="upload-demo"
     :action="action"
     :before-remove="beforeRemove"
-    :limit="1"
+    :limit="null"
     :accept="accept"
     :file-list="fileList"
     :on-success="onSuccess"
