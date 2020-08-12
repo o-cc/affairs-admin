@@ -27,7 +27,7 @@ const users = {
 module.exports = [
   // user login
   {
-    url: '/api/test/authorizations/',
+    url: '/vue-element-admin/authorizations/',
     type: 'post',
     response: config => {
       const { username } = config.body;

@@ -15,7 +15,7 @@ const data = Mock.mock({
 
 module.exports = [
   {
-    url: '/users/',
+    url: '/vue-element-admin/users/',
     type: 'get',
     response: config => {
       const items = data.items;
