@@ -36,7 +36,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="封面图片" :label-width="formLabelWidth">
-        <uploadImg @onSuccess="imgUpSuccess" />
+        <uploadImg :limit="null" @onSuccess="imgUpSuccess" />
         <el-row>
           <div class="demo-image__placeholder image">
             <div class="block">
@@ -113,11 +113,10 @@
       >
         <upLoadVideo @onSuccess="videoUpSuccess" />
         <video
-          v-if="form.video_url"
-          autoplay
+          v-if="detail.video_url"
           controls
           preload
-          :src="form.video_url"
+          :src="detail.video_url"
           class="video"
         ></video>
       </el-form-item>
@@ -179,14 +178,13 @@ export default {
       default() {
         return {
           title: '',
-          news_type: 'Video',
+          news_type: 'GraphText',
           index_image_name: '',
           status: '',
           reason: '',
           author_id: '',
           clicks: 0,
-          comments_count: 0,
-          content: '<p>sdfsdf你的粉丝</p>'
+          comments_count: 0
         };
       }
     }
@@ -224,15 +222,7 @@ export default {
     };
   },
   mounted() {
-    if (this.form.index_image_url) {
-      let url = this.form.index_image_url;
-
-      this.detail = {
-        ...this.form,
-        index_image_name: url.slice(url.lastIndexOf('/') + 1)
-      };
-    }
-
+    this.detail = { ...this.form };
     if (this.form.author_id && this.form.author) {
       this.authorList = [
         { label: this.form.author, value: this.form.author_id }
@@ -242,9 +232,13 @@ export default {
   methods: {
     videoUpSuccess(url) {
       console.log('videoUrl', url);
+      this.detail = {
+        ...this.detail,
+        video_name: url.slice(url.lastIndexOf('/') + 1),
+        video_url: url
+      };
     },
     imgUpSuccess(res) {
-      console.log('response', res);
       this.detail = {
         ...this.detail,
         index_image_name: res.image_name,
@@ -252,11 +246,22 @@ export default {
       };
     },
     feat() {
-      console.log(this.detail);
+      let data = { ...this.detail };
       let error = '';
-      if (!this.detail.title) {
+      if (data.index_image_url) {
+        let url = data.index_image_url;
+        data.index_image_name = url.slice(url.lastIndexOf('/') + 1);
+      }
+
+      if (data.video_url) {
+        data.video_name = data.video_url.slice(
+          data.video_url.lastIndexOf('/') + 1
+        );
+      }
+
+      if (!data.title) {
         error = '新闻标题不能为空';
-      } else if (!this.detail.index_image_name) {
+      } else if (!data.index_image_name) {
         error = '新闻文章封面图片不能为空';
       }
       if (error) {
@@ -265,7 +270,8 @@ export default {
           type: 'error'
         });
       }
-      modifyNews(this.cateId, this.detail)
+
+      modifyNews(this.cateId, data)
         .then(res => {
           Message({
             message: '修改成功',
@@ -276,7 +282,6 @@ export default {
         .catch(() => {});
     },
     cascaderChange(val) {
-      console.log('val', val);
       this.detail = {
         ...this.detail,
         parent_id: val[0]

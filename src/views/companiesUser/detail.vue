@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog :title="title" :visible.sync="open" :before-close="close">
-      <el-form :model="form" class="form">
+      <el-form :model="userData" class="form">
         <el-form-item label="修改密码" :label-width="formLabelWidth">
           <el-switch
             v-model="changePwd"
@@ -39,7 +39,7 @@
         <el-form-item label="用户名称" :label-width="formLabelWidth">
           <el-input
             class="input"
-            v-model="form.username"
+            v-model="userData.username"
             autocomplete="off"
           ></el-input>
         </el-form-item>
@@ -47,7 +47,7 @@
           <el-input
             class="input"
             type="number"
-            v-model="form.mobile"
+            v-model="userData.mobile"
             autocomplete="off"
           ></el-input>
         </el-form-item>
@@ -55,47 +55,57 @@
           <el-input
             class="input"
             type="email"
-            v-model="form.email"
+            v-model="userData.email"
             autocomplete="off"
           ></el-input>
         </el-form-item>
         <el-form-item label="积分" :label-width="formLabelWidth">
-          <el-input class="input" v-model="form.integral"></el-input>
+          <el-input class="input" v-model="userData.integral"></el-input>
         </el-form-item>
-        <el-form-item label="头像链接" :label-width="formLabelWidth">
-          <el-input class="input" v-model="form.avatar"></el-input>
+        <el-form-item label="头像" :label-width="formLabelWidth">
+          <uploadImg @onSuccess="imgUpSuccess" :limit="null" />
+          <el-image
+            style="width: 100px; height: 100px"
+            :src="imgUrl"
+            :preview-src-list="[imgUrl]"
+          ></el-image>
+          <!-- <el-input class="input" v-model="userData.avatar"></el-input> -->
         </el-form-item>
         <el-form-item label="详细地址" :label-width="formLabelWidth">
-          <el-input class="input" v-model="form.addr"></el-input>
+          <el-input class="input" v-model="userData.addr"></el-input>
         </el-form-item>
         <el-form-item label="区域" :label-width="formLabelWidth">
-          <el-input class="input" v-model="form.area"></el-input>
+          <el-input class="input" v-model="userData.area"></el-input>
         </el-form-item>
         <el-form-item label="公司名称" :label-width="formLabelWidth">
-          <el-input class="input" v-model="form.company"></el-input>
+          <el-input class="input" v-model="userData.company"></el-input>
         </el-form-item>
         <el-form-item label="所属部门" :label-width="formLabelWidth">
-          <el-input class="input" v-model="form.departments"></el-input>
+          <el-input class="input" v-model="userData.departments"></el-input>
         </el-form-item>
         <el-form-item label="职业" :label-width="formLabelWidth">
-          <el-input class="input" v-model="form.job"></el-input>
+          <el-input class="input" v-model="userData.job"></el-input>
         </el-form-item>
         <el-form-item label="简介" :label-width="formLabelWidth">
-          <el-input class="input" v-model="form.intro"></el-input>
+          <el-input class="input" v-model="userData.intro"></el-input>
         </el-form-item>
         <el-form-item label="是否活跃" :label-width="formLabelWidth">
-          <el-switch v-model="form.is_active"></el-switch>
+          <el-switch v-model="userData.is_active"></el-switch>
         </el-form-item>
         <el-form-item label="是否管理员" :label-width="formLabelWidth">
-          <el-switch v-model="form.is_admin"></el-switch>
+          <el-switch v-model="userData.is_admin"></el-switch>
         </el-form-item>
         <el-form-item label="最后一次登录" :label-width="formLabelWidth">
-          <el-input class="input" v-model="form.last_login" disabled></el-input>
+          <el-input
+            class="input"
+            v-model="userData.last_login"
+            disabled
+          ></el-input>
         </el-form-item>
         <el-form-item label="创建日期" :label-width="formLabelWidth">
           <el-input
             class="input"
-            v-model="form.date_joined"
+            v-model="userData.date_joined"
             disabled
           ></el-input>
         </el-form-item>
@@ -113,6 +123,7 @@
 <script>
 import { putCompanyUserInfo, putUserPwd } from '@/api';
 import { Message } from 'element-ui';
+import uploadImg from '@/components/Upload';
 
 export default {
   props: {
@@ -122,7 +133,7 @@ export default {
     },
     open: {
       type: Boolean,
-      default: false
+      default: true
     },
     form: {
       type: Object,
@@ -140,6 +151,9 @@ export default {
       })
     }
   },
+  components: {
+    uploadImg
+  },
   data() {
     return {
       dialogFormVisible: true,
@@ -147,10 +161,24 @@ export default {
       changePwd: false,
       pwd: '',
       rePwd: '',
-      loading: false
+      loading: false,
+      userData: {},
+      imgUrl: ''
     };
   },
+  mounted() {
+    this.userData = { ...this.form };
+    this.imgUrl = this.userData.avatar;
+  },
   methods: {
+    imgUpSuccess(res) {
+      this.imgUrl = res.image_url;
+      this.userData = {
+        ...this.userData,
+        avatar_name: res.image_name,
+        avatar: res.image_url
+      };
+    },
     modifiedPwd() {
       if (!this.pwd || !this.rePwd || this.pwd !== this.rePwd) {
         return Message({
@@ -160,7 +188,11 @@ export default {
         });
       }
       this.loading = true;
-      putUserPwd({ id: this.form.id, password: this.pwd, repwd: this.rePwd })
+      putUserPwd({
+        id: this.userData.id,
+        password: this.pwd,
+        repwd: this.rePwd
+      })
         .then(res => {
           this.changePwd = false;
           this.loading = false;
@@ -178,7 +210,7 @@ export default {
       this.$emit('onClose');
     },
     modified() {
-      putCompanyUserInfo(this.form)
+      putCompanyUserInfo(this.userData)
         .then(res => this.$emit('afterDetail'))
         .catch(() => {});
     }

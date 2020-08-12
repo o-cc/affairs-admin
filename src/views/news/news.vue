@@ -46,9 +46,20 @@
           {{ scope.row.comments_count }}
         </template>
       </el-table-column>
-      <el-table-column label="状态" width="80" align="center">
+      <el-table-column label="状态" width="150" align="center">
         <template slot-scope="scope">
-          {{ scope.row.status }}
+          <el-select
+            v-model="scope.row.status"
+            @change="selectChange(scope.row)"
+            :disabled="selecting"
+          >
+            <el-option
+              v-for="item in statusOps"
+              :key="item.value"
+              :value="item.value"
+              :label="item.label"
+            ></el-option>
+          </el-select>
         </template>
       </el-table-column>
       <el-table-column
@@ -62,7 +73,7 @@
           <span>{{ scope.row.create_time }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作" width="150">
+      <el-table-column align="center" label="操作" width="150" fixed="right">
         <template slot-scope="scope">
           <el-button size="mini" @click="rowClick('editor', scope.row)">
             编辑
@@ -118,7 +129,7 @@
 
 <script>
 import { Message } from 'element-ui';
-import { getNewsListByCateId, deleteNews } from '@/api';
+import { getNewsListByCateId, deleteNews, modifyNews } from '@/api';
 import FeatNews from './featNews';
 import NewsDetail from './newsDetail';
 import { param2Obj } from '@/utils';
@@ -143,13 +154,46 @@ export default {
       featModal: false,
       currPage: 1,
       showDetail: false,
-      cellNews: {}
+      cellNews: {},
+      statusOps: [
+        { label: '审核不通过', value: 'FAIL' },
+        { label: '审核中', value: 'UNDER' },
+        { label: '审核通过', value: 'PASS' }
+      ],
+      selecting: false
     };
   },
   mounted() {
     this.fetchNewsList(this.cateId, 1);
   },
   methods: {
+    selectChange(row) {
+      this.selecting = true;
+      //拿到图片的名字或者video的名字
+      let data = { ...row };
+      if (data.video_url) {
+        data.video_name = data.video_url.slice(
+          data.video_url.lastIndexOf('/') + 1
+        );
+      }
+      if (data.index_image_url) {
+        let url = data.index_image_url;
+        data.index_image_name = url.slice(url.lastIndexOf('/') + 1);
+      }
+
+      modifyNews(this.cateId, data)
+        .then(() => {
+          Message({
+            message: '修改成功',
+            type: 'success',
+            duration: 5 * 1000
+          });
+          this.selecting = false;
+        })
+        .catch(() => {
+          this.selecting = false;
+        });
+    },
     afterFeatNews() {
       this.featModal = false;
       this.fetchNewsList(this.cateId, this.currPage);
@@ -160,7 +204,7 @@ export default {
     },
     paginationClick(type) {
       if (this.listLoading) return;
-      url = type === 'next' ? this.newData.next : this.newData.previous;
+      let url = type === 'next' ? this.newData.next : this.newData.previous;
       let { page } = param2Obj(url);
       this.currPage = page;
       this.fetchNewsList(this.cateId, page);
@@ -178,7 +222,6 @@ export default {
         this.showDetail = true;
         this.cellNews = row;
       }
-      console.log(type, row);
     },
     fetchNewsList(id = this.cateId, page = 1) {
       getNewsListByCateId(id, page)

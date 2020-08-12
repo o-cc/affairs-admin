@@ -8,53 +8,64 @@
       fit
       highlight-current-row
     >
-      <el-table-column align="center" label="ID" width="70">
+      <el-table-column align="center" label="ID" width="100">
         <template slot-scope="scope">
           {{ scope.row.id }}
         </template>
       </el-table-column>
-      <el-table-column label="用户名" align="center">
+      <el-table-column label="用户名" width="110" align="center">
         <template slot-scope="scope">
           {{ scope.row.user.username }}
         </template>
       </el-table-column>
-      <el-table-column label="商品数量" width="70" align="center">
+      <el-table-column label="商品数量" width="100" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.count }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="积分/金额" align="center">
+      <el-table-column label="积分/金额" align="center" width="100">
         <template slot-scope="scope">
           {{ scope.row.cost }}
         </template>
       </el-table-column>
-      <el-table-column label="状态" width="70" align="center">
+      <el-table-column label="状态" width="150" align="center">
         <template slot-scope="scope">
-          {{ orderStatus[scope.row.status] }}
+          <el-select
+            v-model="scope.row.status"
+            @change="selectChange(scope.row)"
+            :disabled="selecting"
+          >
+            <el-option
+              v-for="item in orderStatus"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
         </template>
       </el-table-column>
 
-      <el-table-column label="是否删除" width="70" align="center">
+      <el-table-column label="是否删除" width="100" align="center">
         <template slot-scope="scope">
           {{ scope.row.is_delete ? '是' : '否' }}
         </template>
       </el-table-column>
-      <el-table-column label="收货人名称" align="center">
+      <el-table-column label="收货人名称" width="100" align="center">
         <template slot-scope="scope">
           {{ scope.row.receiver.receiver }}
         </template>
       </el-table-column>
-      <el-table-column label="收货人电话" align="center">
+      <el-table-column label="收货人电话" width="150" align="center">
         <template slot-scope="scope">
           {{ scope.row.receiver.mobile }}
         </template>
       </el-table-column>
-      <el-table-column label="收货人地址" align="center">
+      <el-table-column label="收货人地址" width="500" align="center">
         <template slot-scope="scope">
           {{ scope.row.receiver.area }} {{ scope.row.receiver.address }}
         </template>
       </el-table-column>
-      <el-table-column label="商品" align="center">
+      <el-table-column label="商品" width="150" align="center">
         <template slot-scope="scope">
           {{ scope.row.good.name }}
         </template>
@@ -69,13 +80,13 @@
           {{ scope.row.good.integral }}
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="created_at" label="创建时间">
+      <el-table-column align="center" width="150" label="创建时间">
         <template slot-scope="scope">
           <i class="el-icon-time" />
           <span>{{ scope.row.create_time }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="created_at" label="最后一次更新">
+      <el-table-column align="center" width="150" label="最后一次更新">
         <template slot-scope="scope">
           <i class="el-icon-time" />
           <span>{{ scope.row.update_time }}</span>
@@ -121,10 +132,10 @@
 </template>
 
 <script>
-import { getOrders, deleteCompanyUser } from '@/api';
+import { getOrders, deleteCompanyUser, putOrders } from '@/api';
 import { param2Obj } from '@/utils';
-// import featUser from './featUser';
 import detail from './detail';
+import { Message } from 'element-ui';
 export default {
   filters: {
     statusFilter(status) {
@@ -153,13 +164,45 @@ export default {
       currUserInfo: {},
       showDetail: false,
       showFeat: false,
-      orderStatus: ['已取消', '代发货', '已发货', '已收获']
+      orderStatus: [
+        {
+          label: '已取消',
+          value: 0
+        },
+        {
+          label: '代发货',
+          value: 1
+        },
+        {
+          label: '已发货',
+          value: 2
+        },
+        {
+          label: '已收货',
+          value: 3
+        }
+      ],
+      selecting: false
     };
   },
   created() {
     this.fetchData();
   },
   methods: {
+    selectChange(row) {
+      this.selecting = true;
+      putOrders({ id: row.id, status: row.status })
+        .then(() => {
+          Message({
+            message: '修改成功',
+            type: 'success'
+          });
+          this.selecting = false;
+        })
+        .catch(() => {
+          this.selecting = false;
+        });
+    },
     afterFeat() {
       this.fetchData(1);
       this.showFeat = false;

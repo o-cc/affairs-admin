@@ -36,7 +36,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="封面图片" :label-width="formLabelWidth">
-        <uploadImg @onSuccess="imgUpSuccess" />
+        <uploadImg :limit="null" @onSuccess="imgUpSuccess" />
         <el-row>
           <div class="demo-image__placeholder image">
             <div class="block">
@@ -182,7 +182,7 @@ export default {
         title: '',
         news_type: 'GraphText',
         index_image_name: '',
-        status: '',
+        status: 'PASS',
         reason: '',
         author_id: '',
         clicks: 0,
@@ -215,7 +215,6 @@ export default {
       this._data.form.video_name = url.slice(url.lastIndexOf('/') + 1);
     },
     imgUpSuccess(res) {
-      console.log('response', res);
       this.form = {
         ...this.form,
         index_image_name: res.image_name
@@ -223,7 +222,6 @@ export default {
       this.imgUrl = res.image_url;
     },
     feat() {
-      console.log(this.form);
       let error = '';
       if (!this.form.title) {
         error = '新闻标题不能为空!';
@@ -252,7 +250,6 @@ export default {
         .catch(() => {});
     },
     cascaderChange(val) {
-      console.log('val', val);
       this.form = {
         ...this.form,
         parent_id: val[0]

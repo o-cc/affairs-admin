@@ -10,9 +10,9 @@
           <el-select v-model="form.status">
             <el-option
               v-for="(item, idx) in orderStatus"
-              :key="item"
-              :label="item"
-              :value="idx"
+              :key="idx"
+              :label="item.label"
+              :value="item.value"
             ></el-option>
           </el-select>
         </el-form-item>

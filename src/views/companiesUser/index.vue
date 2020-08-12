@@ -14,24 +14,23 @@
       border
       fit
       highlight-current-row
-      @cell-click="cellClick"
     >
       <el-table-column align="center" label="ID" width="70">
         <template slot-scope="scope">
-          {{ scope.$index }}
+          {{ scope.row.id }}
         </template>
       </el-table-column>
-      <el-table-column label="用户名" width="210" align="center">
+      <el-table-column label="用户名" align="center">
         <template slot-scope="scope">
           {{ scope.row.username }}
         </template>
       </el-table-column>
-      <el-table-column label="手机号" width="110" align="center">
+      <el-table-column label="手机号" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.mobile }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="邮箱" width="110" align="center">
+      <el-table-column label="邮箱" align="center">
         <template slot-scope="scope">
           {{ scope.row.email }}
         </template>
@@ -41,20 +40,22 @@
           {{ scope.row.integral }}
         </template>
       </el-table-column>
-      <el-table-column label="头像">
+      <!-- <el-table-column label="头像" width="300">
         <template slot-scope="scope">
           {{ scope.row.avatar }}
         </template>
-      </el-table-column>
-      <el-table-column
-        align="center"
-        prop="created_at"
-        label="最后登录时间"
-        width="200"
-      >
+      </el-table-column> -->
+      <el-table-column align="center" prop="created_at" label="最后登录时间">
         <template slot-scope="scope">
           <i class="el-icon-time" />
           <span>{{ scope.row.last_login }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="操作" width="100">
+        <template slot-scope="scope">
+          <el-button size="mini" @click="handleEdit('editor', scope.row)">
+            编辑
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -81,13 +82,13 @@
     </el-row>
 
     <detail
-      :open="showDetail"
+      v-if="showDetail"
       @afterDetail="afterDetail"
       :form="currUserInfo"
       @onClose="showDetail = false"
     />
     <featUser
-      :open="showFeat"
+      v-if="showFeat"
       @afterFeat="afterFeat"
       @onClose="showFeat = false"
     />
@@ -134,7 +135,7 @@ export default {
     this.fetchData();
   },
   methods: {
-    handleEdit(idx, row) {
+    handleEdit(type, row) {
       this.cellClick(row);
     },
     handleDelete(idx, row) {
