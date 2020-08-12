@@ -15,7 +15,7 @@ const query = qs.parse(window.location.search.slice(1));
 export default {
   name: 'App',
   mounted() {
-    let iCode = window.location.pathname.split('/')[1];
+    let iCode = window.location.pathname.split('/')[2];
     if (!iCode && !query.debug) {
       Message({
         message: '找不到该企业或企业不存在！',
@@ -29,7 +29,7 @@ export default {
       }
     }
     if (query.debug) {
-      iCode = iCode || 'test';
+      iCode = query.iCode || 'test';
     }
     api.setBaseUrl(iCode);
     setUrl(iCode);
