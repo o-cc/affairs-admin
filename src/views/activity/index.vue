@@ -73,6 +73,7 @@
       <detail-act
         :form="currSelect"
         :key="currSelect ? currSelect.id : 'curr_'"
+        @afterFetch="afterDetail"
       ></detail-act>
       <el-divider></el-divider>
       <h3 class="news-wrap">答题列表：</h3>
@@ -134,8 +135,11 @@ export default {
       this.featModal = false;
       this.fetchList();
     },
-    afterDetail() {
-      this.currSelect = undefined;
+    afterDetail(data) {
+      this.currSelect = {
+        ...this.currSelect,
+        ...data
+      };
       this.fetchList();
     },
     delCate(row) {

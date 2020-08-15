@@ -74,7 +74,7 @@ export default {
     handleClick(type) {
       if (type === 'cancel') {
         this.$confirm('确认取消吗?').then(() => {
-          this.info = this.form;
+          this.info = JSON.parse(JSON.stringify(this.form));
         });
         return;
       }
@@ -92,9 +92,9 @@ export default {
       }
       this.isLoading = true;
       putAd(this.info)
-        .then(() => {
+        .then(res => {
           Message({ message: '修改成功', type: 'success' });
-          this.$emit('afterFetch');
+          this.$emit('afterFetch', res.data);
           this.isLoading = false;
           this.isModify = false;
         })

@@ -131,8 +131,12 @@ export default {
     }
   },
   methods: {
-    afterDetail() {
-      this.currSelectCate = undefined;
+    afterDetail(data) {
+      // this.currSelectCate = undefined;
+      this.currSelectCate = {
+        ...this.currSelectCate,
+        ...data
+      };
       this.getCategoiesList();
     },
     delCate() {

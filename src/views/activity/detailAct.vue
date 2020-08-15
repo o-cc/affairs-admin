@@ -73,12 +73,13 @@ export default {
       } else if (type === 'modify') {
         this.$confirm('确认修改吗?').then(() => {
           putActivities(this.actInfo)
-            .then(() => {
+            .then(res => {
               Message({
                 message: '修改成功',
                 type: 'success'
               });
               this.isModify = false;
+              this.$emit('afterFetch', res.data);
             })
             .catch(() => {});
         });

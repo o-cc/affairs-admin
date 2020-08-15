@@ -6,6 +6,7 @@
         v-model="currForm.name"
         autocomplete="off"
         placeholder="类别名称"
+        :disabled="!modify"
       ></el-input>
     </el-form-item>
     <el-form-item label="父新闻类别" :label-width="formLabelWidth">
@@ -15,6 +16,7 @@
         clearable
         v-model="currForm.parent_id"
         placeholder="新闻类别"
+        :disabled="!modify"
       ></el-cascader>
     </el-form-item>
     <el-form-item label="是否显示在首页" :label-width="formLabelWidth">
@@ -22,6 +24,7 @@
         v-model="currForm.is_index"
         active-color="#13ce66"
         inactive-color="#ff4949"
+        :disabled="!modify"
       ></el-switch>
     </el-form-item>
     <el-form-item label="类别标识" :label-width="formLabelWidth">
@@ -29,6 +32,7 @@
         class="input"
         placeholder="类别标识"
         v-model="currForm.key"
+        :disabled="!modify"
       ></el-input>
     </el-form-item>
     <el-form-item label="该类别顺序" :label-width="formLabelWidth">
@@ -37,6 +41,7 @@
         v-model="currForm.sequence"
         placeholder="该类别顺序"
         type="number"
+        :disabled="!modify"
       ></el-input>
     </el-form-item>
     <el-form-item label="类别修改" :label-width="formLabelWidth">
@@ -109,12 +114,12 @@ export default {
             ...this.currForm,
             parent_id: parent_id
           };
-          putCateById(data).then(() => {
+          putCateById(data).then(res => {
             this.$message({
               type: 'success',
               message: '修改成功!'
             });
-            this.$emit('afterDetail');
+            this.$emit('afterDetail', res.data);
             this.modify = false;
           });
         })
