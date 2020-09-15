@@ -301,3 +301,33 @@ export function putOrders(data) {
     data
   });
 }
+
+export function postLives(data) {
+  return request({
+    url: `/lives/`,
+    method: 'post',
+    data
+  });
+}
+
+export function getLives(params) {
+  return request({
+    url: `/lives/`,
+    method: 'get',
+    params
+  });
+}
+
+export function putLives(data) {
+  return request({
+    url: `/lives/${data.id}/`,
+    method: 'put',
+    data
+  });
+}
+export function deleteLives(id) {
+  return request({
+    url: `/lives/${id}/`,
+    method: 'delete'
+  });
+}

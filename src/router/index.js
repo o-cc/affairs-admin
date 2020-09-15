@@ -146,6 +146,18 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/online',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'Online',
+        component: () => import('@/views/online/index'),
+        meta: { title: '直播管理', icon: 'el-icon-data-board' }
+      }
+    ]
+  },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
